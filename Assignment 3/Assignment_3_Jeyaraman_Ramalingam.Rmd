@@ -1,0 +1,117 @@
+---
+title: "Assignment_3_Shiny"
+author: "Jeyaraman Ramalingam"
+date: "3/14/2021"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Libraries
+```{r libs,echo=FALSE}
+library(shiny)
+library(shinythemes)
+library(dplyr)
+library(readr)
+library(ggplot2)
+```
+
+
+### Input Transformation
+
+```{r ,echo=FALSE}
+
+wonder_data <- read_csv("cleaned-cdc-mortality-1999-2010-2.csv")
+head(wonder_data)
+
+```
+
+### Question 1
+
+```{r qn1_shiny, echo=FALSE}
+ui <- fluidPage(
+  titlePanel("Crude Mortality By States"), 
+  sidebarLayout(
+    sidebarPanel(selectInput("select", label = h2("Causes of Death"), 
+                choices = wonder_data$ICD.Chapter, 
+                selected = 1,multiple=TRUE,
+                width = '50%'),width = 500),
+    mainPanel(
+      plotOutput("mortality_plot"),width = 500
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$mortality_plot <- renderPlot({
+    ggplot(wonder_data[wonder_data$ICD.Chapter == input$select,] , aes(x = reorder(State, Crude.Rate), y = Crude.Rate)) +
+      labs(x = "State", y = "Crude Mortality Rate") +  
+      geom_bar(stat = "identity",color="red")
+  }, width = 'auto', height = 'auto')
+}
+
+shinyApp(ui = ui, server = server)
+
+
+```
+
+
+## National Average Calculation
+
+Steps:
+
+1. Group the dataset by Year
+2. Calculation number of deaths and population per year
+3. Calculate Yearly average
+4. Merge yearly average conditionally to original dataset
+
+``` {r transform,echo=FALSE}
+national_average <- wonder_data %>%
+  group_by(Year) %>%
+  summarise(sum_deaths = sum(Deaths),sum_population=sum(Population)) %>%
+  mutate(avg_rate=(sum_deaths/sum_population)*100000)
+
+national_average
+
+wonder_modified <- merge(x = wonder_data, y = national_average, by = "Year", all.x = TRUE)
+head(wonder_modified)
+```
+
+
+### Question 2
+
+```{r qn2_shiny, echo=FALSE}
+ui <- fluidPage(
+  titlePanel("Crude Mortality By States and National Average"), 
+  sidebarLayout(
+    sidebarPanel(selectInput("cause_select", label = h2("Causes of Death"), 
+                             choices = wonder_modified$ICD.Chapter, 
+                             selected = 1,
+                             width = '50%'),
+    selectInput("state_select", label = h2("State"), 
+                             choices = wonder_modified$State, 
+                             selected = 1,
+                             width = '50%'),width = 500),
+    mainPanel(
+      plotOutput("mortality_plot"),width = 500
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$mortality_plot <- renderPlot({
+    wonder_modified %>%
+      select(Year,State,ICD.Chapter,Crude.Rate,avg_rate) %>%
+      filter(ICD.Chapter == input$cause_select,State == input$state_select) %>%
+      ggplot() +  geom_bar(aes(x=Year,weight=Crude.Rate),color="blue",fill="blue")+
+      labs(x = "State", y = "Crude Mortality Rate") + 
+      geom_line(aes(x = Year, y = avg_rate, linetype = "National Average"), col = "red", lwd = 1) +
+      scale_linetype(name = NULL) 
+  }, width = 'auto', height = 'auto')
+}
+
+shinyApp(ui = ui, server = server)
+```
