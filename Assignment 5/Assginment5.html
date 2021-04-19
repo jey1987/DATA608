@@ -61,7 +61,28 @@ var t3 = d3.csv(url,function (data) {
        tableBody.appendChild(tr);
        
        for (var j=0; j<3; j++){
-	      if(j==0){
+	   if(i==0)
+	   {	      if(j==0){
+           var td = document.createElement('TD');
+           td.width='75';
+           td.appendChild(document.createTextNode("Name"));
+           tr.appendChild(td);
+		   }
+		   if(j==1){
+           var td = document.createElement('TD');
+           td.width='75';
+           td.appendChild(document.createTextNode("Height"));
+           tr.appendChild(td);
+		   }
+		   if(j==2){
+           var td = document.createElement('TD');
+           td.width='75';
+           td.appendChild(document.createTextNode("Weight"));
+           tr.appendChild(td);
+		   }
+       }
+	   if(i>0)
+	   {	      if(j==0){
            var td = document.createElement('TD');
            td.width='75';
            td.appendChild(document.createTextNode(data[i].Name));
@@ -79,6 +100,7 @@ var t3 = d3.csv(url,function (data) {
            td.appendChild(document.createTextNode(data[i].Weight));
            tr.appendChild(td);
 		   }
+}
        }
     }
     tableCSV.appendChild(table);
