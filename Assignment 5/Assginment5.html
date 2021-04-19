@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<meta charset='utf-8'>
+<html>
+<head>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <link rel='stylesheet' href='style.css'>
+  </head>
+<title> Assignment 5 - Jeyaraman Ramalingam </title>
+<body>
+<h1> Part 1 - Reversing a string </h1>
+<script>
+function reverse_string()
+{
+var str = document.getElementById("t1").value;
+var t = document.getElementById("reverse_output");
+var t_output =str.split("").reverse(); 
+t.innerHTML = t_output.toString().replaceAll(",","");
+}
+
+function addTable() {
+      
+var myTableDiv = document.getElementById("myDynamicTable");
+myTableDiv.innerHTML = "";
+    var table = document.createElement('TABLE');
+    table.border='1';
+    
+    var tableBody = document.createElement('TBODY');
+    table.appendChild(tableBody);
+    var input_value = document.getElementById("t2").value  
+	k=0
+    for (var i=0; i<5; i++){
+       var tr = document.createElement('TR');
+       tableBody.appendChild(tr);
+       
+       for (var j=0; j<4; j++){
+           var td = document.createElement('TD');
+           td.width='75';
+		   k=k+1
+           td.appendChild(document.createTextNode((k)*input_value));
+           tr.appendChild(td);
+       }
+    }
+    myTableDiv.appendChild(table);
+    
+}
+
+function loadCSV()
+{
+var url = 'https://raw.githubusercontent.com/jey1987/DATA608/master/Assignment%205/presidents.csv';
+var t3 = d3.csv(url,function (data) {
+	var tableCSV = document.getElementById("csvTable");
+	var columns = ['Name','Height','Weight'];
+	tableCSV.innerHTML = "";
+    var table = document.createElement('TABLE');
+    table.border='1';
+    
+    var tableBody = document.createElement('TBODY');
+    table.appendChild(tableBody);
+    for (var i=0; i<data.length; i++){
+       var tr = document.createElement('TR');
+       tableBody.appendChild(tr);
+       
+       for (var j=0; j<3; j++){
+	      if(j==0){
+           var td = document.createElement('TD');
+           td.width='75';
+           td.appendChild(document.createTextNode(data[i].Name));
+           tr.appendChild(td);
+		   }
+		   if(j==1){
+           var td = document.createElement('TD');
+           td.width='75';
+           td.appendChild(document.createTextNode(data[i].Height));
+           tr.appendChild(td);
+		   }
+		   if(j==2){
+           var td = document.createElement('TD');
+           td.width='75';
+           td.appendChild(document.createTextNode(data[i].Weight));
+           tr.appendChild(td);
+		   }
+       }
+    }
+    tableCSV.appendChild(table);
+})
+}
+function displayDetails(){
+var url = 'https://raw.githubusercontent.com/jey1987/DATA608/master/Assignment%205/presidents.csv';
+  var t3 = d3.csv(url,function (data) {
+    var columns = ['Name','Height','Weight'];
+	var input_text = document.getElementById("t5").value.toLowerCase();	
+    var subset = data.filter( function(d) { return d.Name.toLowerCase().indexOf( input_text ) !== -1 } ); 
+	csvHeight.innerHTML=subset[0].Height;
+	csvWeight.innerHTML=subset[0].Weight;
+
+    });
+}
+</script>
+
+<p>
+<form>
+	<input type="text" id = "t1" value="" >
+    <input type="button" value="Reverse a String" onClick="reverse_string();">
+</form>
+</p>
+
+<div id="reverse_output"></div>
+
+<h1> Part 2 - Multiples of Values </h1>
+
+<p>
+<form>
+	<input type="text" id = "t2" value="" >
+    <input type="button" value="Generate Multiples" onClick="Javascript:addTable()">
+</form>
+</p>
+
+<div id="myDynamicTable">
+</div>
+<h1> Part 3 - CSV Load </h1>
+<input type="button" value="Load CSV" onClick="Javascript:loadCSV()">
+<div id="csvTable">
+</div>
+
+
+<h1> Part 3 - CSV Display Height </h1>
+
+
+ <script src="d3.min.js?v=3.2.8"></script>
+<input type="text" value="" id="t5">
+<input type="button" value="Display Details" onClick="Javascript:displayDetails()">
+
+The President's Height is <div id="csvHeight">
+</div>
+The President's Weight is <div id="csvWeight">
+</div>
+</body>
+</html>
+
+
