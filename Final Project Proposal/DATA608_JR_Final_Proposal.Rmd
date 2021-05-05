@@ -1,0 +1,64 @@
+---
+title: "DATA 608 Final Project Proposal - Global Terrorism "
+author: "Jeyaraman Ramalingam"
+date: "5/3/2021"
+output:
+  pdf_document:
+    toc: yes
+    toc_depth: 2
+  html_document:
+    toc: yes
+    toc_depth: '2'
+    df_print: paged
+    toc_float: true
+    theme: flatly
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+## Research Overview
+
+Terrorism  is a never ending nemesis for the Global Community. Every Year , the threat because of terrorism is growing making it essential to look back and find out the vulnerable regions, countries and provinces/states. This would provide the government organizations necessary insights to take better decisions on handling the Global Terrorism.
+
+
+## Data Source
+
+**Data Source URL** - https://gtd.terrorismdata.com/files/gtd-1970-2019-4/
+
+The GTD is an open-source database, which provides information on domestic and international terrorist attacks around the world since 1970, and now includes more than 200,000 events. For each event, a wide range of information is available, including the date and location of the incident, the weapons used, nature of the target, the number of casualties, and – when identifiable – the group or individual responsible.
+
+## Data Preparation Strategies
+
+#### Subsetting 
+
+The data source is exhaustive and contains lot of information about different parameters of an terrorism event. For this research we need information about regions, countries, states and number of terrorism events. Data Subsetting will be done to carve only essential information from the dataset instead of ingesting raw data.
+
+#### Dynamic Filters
+
+Using Shiny Tools , Dynamic filters will be put into place to slice and dice the dataset based on different parameters.
+
+## Data Analysis
+
+The following questions will be answered after data analysis on Global Terrorism data.
+
+1. For a given range of dates , What are the top countries with most terrorist attacks ?
+2. For a given country and a date range, which state/province has more attacks ?
+3. For a given range of dates , which Region in the world has  most terrorist attacks ?
+4. For a given range of dates and attack type  , which countries are impacted by the terrorist attack ?
+
+## Data Visualization
+
+Using Shiny App in R , The Interactive Visualizations will be generated to answer the above exploratory analysis questions. 
+
+## Tools & Technologies
+
+1. R Programming
+2. Dplyr 
+3. tidyverse
+4. Shiny
+5. ggplot2
+
+
