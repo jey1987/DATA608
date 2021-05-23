@@ -1,0 +1,13 @@
+name: FP_qn1
+title: FP_qn1
+username:
+account: jey1987
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 4170212
+bundleId: 4629210
+url: https://jey1987.shinyapps.io/FP_Qn1/
+when: 1621742140.02271
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: 608_JR_Final_Project.html|608_JR_Final_Project.Rmd|globalterrorismdb_csv.csv|JR_608_FInal_Project.R|608_JR_Final_Project_files
