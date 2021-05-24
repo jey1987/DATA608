@@ -79,12 +79,11 @@ ui <- fluidPage(
   titlePanel(HTML("<h1><center><font size=14> Top Countries with most terrorist Attacks  </font></center></h1>")),
   sidebarLayout(
     sidebarPanel(
-      
-      tags$div(img(src = "https://ibc-static.broad.msu.edu/sites/globaledge/blog/54529.jpg",height="75%", width="100%")),
+      tags$div(img(src = "https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/pic1.png",height="75%", width="100%")),
     ),
     mainPanel(
       dateRangeInput("daterange4", "Pick Date Range ",start = df$event_date,end = df$event_date),
-      actionButton("do", "Fetch Report", class = "btn-warning"),
+      actionButton("do", "Fetch Report", class = "btn btn-danger"),
       htmlOutput("text"),
       plotOutput("country_by_date")))
 )
@@ -122,12 +121,12 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       
-      tags$div(img(src = "https://ibc-static.broad.msu.edu/sites/globaledge/blog/54529.jpg",height="75%", width="100%")),
+      tags$div(img(src = "https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/pic2.png",height="75%", width="100%")),
     ),
     mainPanel(
       selectInput("variables", "Variable:", choices=c("All",unique(df_country_list$country_txt))),
       dateRangeInput("daterange4", "Pick Date Range ",start = df$event_date,end = df$event_date),
-      actionButton("do", "Fetch Report", class = "btn-warning"),
+      actionButton("do", "Fetch Report", class = "btn btn-danger"),
       htmlOutput("text"),
       plotOutput("country_by_date")))
 )
@@ -165,11 +164,11 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       
-      tags$div(img(src = "https://ibc-static.broad.msu.edu/sites/globaledge/blog/54529.jpg",height="75%", width="100%")),
+      tags$div(img(src = "https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/pic3.jpg",height="75%", width="100%")),
     ),
     mainPanel(
       dateRangeInput("daterange4", "Pick Date Range ",start = df$event_date,end = df$event_date),
-      actionButton("do", "Fetch Report", class = "btn-warning"),
+      actionButton("do", "Fetch Report", class = "btn btn-danger"),
       htmlOutput("text"),
       plotOutput("country_by_date")))
   )
@@ -206,12 +205,12 @@ ui <- fluidPage(
  sidebarLayout(
   sidebarPanel(
     
-tags$div(img(src = "https://ibc-static.broad.msu.edu/sites/globaledge/blog/54529.jpg",height="75%", width="100%")),
+tags$div(img(src = "https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/pic4.jpg",height="75%", width="100%")),
   ),
 mainPanel(
 selectInput("variables", "Attack Type:", choices=c("All",unique(df_final$attacktype1_txt)),multiple=TRUE),
 dateRangeInput("daterange4", "Pick Date Range ",start = df$event_date,end = df$event_date),
-actionButton("do", "Fetch Report", class = "btn-warning"),
+actionButton("do", "Fetch Report", class = "btn btn-danger"),
 htmlOutput("text"),
 plotOutput("country_by_date"))
 ))
