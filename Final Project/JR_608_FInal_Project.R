@@ -6,8 +6,13 @@ library(kableExtra)
 library(shiny)
 library(shinythemes)
 library(shinyWidgets)
-data<- read.csv("globalterrorismdb_csv.csv", header=TRUE, check.names = FALSE)
+library(readxl)
+library(curl)
+
+data<- read.csv("https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/globalterrorismdb_csv.csv")
 colnames(data)
+names(data)[names(data) == "ï..iyear"] <- "iyear"
+
 
 df <- data %>%
   select(iyear,imonth,iday,country,country_txt,region,region_txt,provstate,city,attacktype1,attacktype1_txt,attacktype2,attacktype2_txt,attacktype3,attacktype3_txt)
@@ -33,6 +38,11 @@ ggplot(df_sample, aes(x = attacktype1_txt)) + geom_dotplot(method="histodot", bi
 df_country_cnt <- df_final %>%
   group_by(country_txt) %>%
   summarise(event_cnt=n())
+
+df_country_list <- df_final %>%
+  group_by(country_txt) %>%
+  summarise(event_cnt=n()) %>%
+  select(country_txt)
 
 df_year_cnt <- df_final %>%
   group_by(iyear) %>%
@@ -73,168 +83,45 @@ ggplot(terror_map, aes(map_id = region, fill = event_cnt))+
 
 
 # Shiny App 1
-
-ui <- fluidPage(
-  setBackgroundColor(  color = c("#F7FBFF", "#2171B5"), gradient = c("linear", "radial"),  direction = c("bottom", "top", "right", "left"),shinydashboard = FALSE),
-  titlePanel(HTML("<h1><center><font size=14> Top Countries with most terrorist Attacks  </font></center></h1>")),
-  sidebarLayout(
-    sidebarPanel(
-      tags$div(img(src = "https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/pic1.png",height="75%", width="100%")),
-    ),
-    mainPanel(
-      dateRangeInput("daterange4", "Pick Date Range ",start = df$event_date,end = df$event_date),
-      actionButton("do", "Fetch Report", class = "btn btn-danger"),
-      htmlOutput("text"),
-      plotOutput("country_by_date")))
-)
-
-
-server <- function(input, output) {
-  output$text <- renderText({
-    paste0("<br>", " ", "</br>","<br>", " ", "</br>","<br>", " ", "</br>")
-  })
-  output$text1 <- renderText({
-    paste0("<br>", " ", "</br>")
-  })
-  observeEvent(input$do, {
-    output$country_by_date <- renderPlot({
-      df_final %>%
-        filter(event_date >= input$daterange4[1] & event_date < input$daterange4[2]) %>%
-        select(country_txt) %>%
-        group_by(country_txt) %>%
-        summarise(event_cnt=n()) %>%
-        arrange(desc(event_cnt)) %>%
-        head(10) %>%
-        ggplot(aes(country_txt,event_cnt,size=event_cnt,color=factor(event_cnt))) + geom_point() +   coord_flip() + theme_bw()      
-    })
-  })
-}
-
-shinyApp(ui, server)
-
-# Shiny App 2
-
-
-ui <- fluidPage(
-  setBackgroundColor(  color = c("#F7FBFF", "#2171B5"), gradient = c("linear", "radial"),  direction = c("bottom", "top", "right", "left"),shinydashboard = FALSE),
-  titlePanel(HTML("<h1><center><font size=14> State/Provinces with Most Terrorist Attacks  </font></center></h1>")),
-  sidebarLayout(
-    sidebarPanel(
-      
-      tags$div(img(src = "https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/pic2.png",height="75%", width="100%")),
-    ),
-    mainPanel(
-      selectInput("variables", "Variable:", choices=c("All",unique(df_country_list$country_txt))),
-      dateRangeInput("daterange4", "Pick Date Range ",start = df$event_date,end = df$event_date),
-      actionButton("do", "Fetch Report", class = "btn btn-danger"),
-      htmlOutput("text"),
-      plotOutput("country_by_date")))
-)
-
-server <- function(input, output) {
-  output$text <- renderText({
-    paste0("<br>", " ", "</br>","<br>", " ", "</br>","<br>", " ", "</br>")
-  })
-  output$text1 <- renderText({
-    paste0("<br>", " ", "</br>")
-  })
-  observeEvent(input$do, {
-    output$country_by_date <- renderPlot({
-      df_final %>%
-        filter(event_date >= input$daterange4[1] & event_date < input$daterange4[2] & country_txt==input$variables) %>%
-        select(provstate) %>%
-        group_by(provstate) %>%
-        summarise(event_cnt=n()) %>%
-        arrange(desc(event_cnt)) %>%
-        head(10) %>%
-        ggplot(aes(provstate,event_cnt,size=event_cnt,color=factor(event_cnt))) + geom_col() +   coord_flip() + theme_bw()
-      
-    })
-  })
-}
-
-shinyApp(ui, server)
-
-# Shiny App 3
-
-
-ui <- fluidPage(
-  setBackgroundColor(  color = c("#F7FBFF", "#2171B5"), gradient = c("linear", "radial"),  direction = c("bottom", "top", "right", "left"),shinydashboard = FALSE),
-  titlePanel(HTML("<h1><center><font size=14> Regions with Most Terrorism Impacts  </font></center></h1>")),
-  sidebarLayout(
-    sidebarPanel(
-      
-      tags$div(img(src = "https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/pic3.jpg",height="75%", width="100%")),
-    ),
-    mainPanel(
-      dateRangeInput("daterange4", "Pick Date Range ",start = df$event_date,end = df$event_date),
-      actionButton("do", "Fetch Report", class = "btn btn-danger"),
-      htmlOutput("text"),
-      plotOutput("country_by_date")))
+  
+  ui <- fluidPage(
+    setBackgroundColor(  color = c("#F7FBFF", "#2171B5"), gradient = c("linear", "radial"),  direction = c("bottom", "top", "right", "left"),shinydashboard = FALSE),
+    titlePanel(HTML("<h1><center><font size=14> Top Countries with most terrorist Attacks  </font></center></h1>")),
+    sidebarLayout(
+      sidebarPanel(
+        tags$div(img(src = "https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/pic1.png",height="75%", width="100%")),
+      ),
+      mainPanel(
+        dateRangeInput("daterange4", "Pick Date Range ",start = df$event_date,end = df$event_date),
+        actionButton("do", "Fetch Report", class = "btn btn-danger"),
+        htmlOutput("text"),
+        plotOutput("country_by_date")))
   )
-
-server <- function(input, output) {
-  output$text <- renderText({
-    paste0("<br>", " ", "</br>","<br>", " ", "</br>","<br>", " ", "</br>")
-  })
-  output$text1 <- renderText({
-    paste0("<br>", " ", "</br>")
-  })
-  observeEvent(input$do, {
-    output$country_by_date <- renderPlot({
-      df_final %>%
-        filter(event_date >= input$daterange4[1] & event_date < input$daterange4[2]) %>%
-        select(region_txt) %>%
-        group_by(region_txt) %>%
-        summarise(event_cnt=n()) %>%
-        arrange(desc(event_cnt)) %>%
-        head(10) %>%
-        ggplot(aes(region_txt,event_cnt)) + geom_col(color="red",fill="gray",size=1)+ theme_bw()
-      
+  
+  
+  server <- function(input, output) {
+    output$text <- renderText({
+      paste0("<br>", " ", "</br>","<br>", " ", "</br>","<br>", " ", "</br>")
     })
-  })
-}
-
-shinyApp(ui, server)
-
-# Shiny App 4
-
-ui <- fluidPage(
- setBackgroundColor(  color = c("#F7FBFF", "#2171B5"), gradient = c("linear", "radial"),  direction = c("bottom", "top", "right", "left"),shinydashboard = FALSE),
- titlePanel(HTML("<h1><center><font size=14> Type of Terrorist Attack On Countries over Years  </font></center></h1>")),
- sidebarLayout(
-  sidebarPanel(
-    
-tags$div(img(src = "https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/pic4.jpg",height="75%", width="100%")),
-  ),
-mainPanel(
-selectInput("variables", "Attack Type:", choices=c("All",unique(df_final$attacktype1_txt)),multiple=TRUE),
-dateRangeInput("daterange4", "Pick Date Range ",start = df$event_date,end = df$event_date),
-actionButton("do", "Fetch Report", class = "btn btn-danger"),
-htmlOutput("text"),
-plotOutput("country_by_date"))
-))
+    output$text1 <- renderText({
+      paste0("<br>", " ", "</br>")
+    })
+    observeEvent(input$do, {
+      output$country_by_date <- renderPlot({
+        df_final %>%
+          filter(event_date >= input$daterange4[1] & event_date < input$daterange4[2]) %>%
+          select(country_txt) %>%
+          group_by(country_txt) %>%
+          summarise(event_cnt=n()) %>%
+          arrange(desc(event_cnt)) %>%
+          head(10) %>%
+          ggplot(aes(country_txt,event_cnt,size=event_cnt,color=factor(event_cnt))) + geom_point() +   coord_flip() + theme_bw()      
+      })
+    })
+  }
+  
+  shinyApp(ui, server)
 
 
-server <- function(input, output) {
-output$text <- renderText({
-  paste0("<br>", " ", "</br>","<br>", " ", "</br>")
-})
-
-observeEvent(input$do, {
-  output$country_by_date <- renderPlot({
-    df_final %>%
-      filter(event_date >= input$daterange4[1] & event_date < input$daterange4[2] & attacktype1_txt==input$variables) %>%
-      select(country_txt) %>%
-      mutate(region=country_txt) %>%
-      group_by(region) %>%
-      summarise(event_cnt=n()) %>%
-      arrange(desc(event_cnt)) %>%
-      head(10) %>%
-      right_join(world_map, by = "region") %>%
-      ggplot(aes(map_id = region, fill = event_cnt))+  geom_map(map = terror_map,  color = "white")+  expand_limits(x = terror_map$long, y = terror_map$lat)+  scale_fill_gradient(low='#edaf98', high='#fa0511')+ theme_bw()
-  })
-})
-}
-
-shinyApp(ui, server)
+  
+  ggplot(df_sample, aes(x = region_txt)) + geom_dotplot(method="histodot", fill="green")+ coord_flip()

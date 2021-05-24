@@ -281,51 +281,10 @@ div.tocify {
 <h2>Data Source</h2>
 <p>Data Source URL - <a href="https://gtd.terrorismdata.com/files/gtd-1970-2019-4/" class="uri">https://gtd.terrorismdata.com/files/gtd-1970-2019-4/</a></p>
 <p>The GTD is an open-source database, which provides information on domestic and international terrorist attacks around the world since 1970, and now includes more than 200,000 events. For each event, a wide range of information is available, including the date and location of the incident, the weapons used, nature of the target, the number of casualties, and – when identifiable – the group or individual responsible.</p>
-<pre><code>##   [1] &quot;ï»¿eventid&quot;         &quot;iyear&quot;              &quot;imonth&quot;            
-##   [4] &quot;iday&quot;               &quot;approxdate&quot;         &quot;extended&quot;          
-##   [7] &quot;resolution&quot;         &quot;country&quot;            &quot;country_txt&quot;       
-##  [10] &quot;region&quot;             &quot;region_txt&quot;         &quot;provstate&quot;         
-##  [13] &quot;city&quot;               &quot;latitude&quot;           &quot;longitude&quot;         
-##  [16] &quot;specificity&quot;        &quot;vicinity&quot;           &quot;location&quot;          
-##  [19] &quot;summary&quot;            &quot;crit1&quot;              &quot;crit2&quot;             
-##  [22] &quot;crit3&quot;              &quot;doubtterr&quot;          &quot;alternative&quot;       
-##  [25] &quot;alternative_txt&quot;    &quot;multiple&quot;           &quot;success&quot;           
-##  [28] &quot;suicide&quot;            &quot;attacktype1&quot;        &quot;attacktype1_txt&quot;   
-##  [31] &quot;attacktype2&quot;        &quot;attacktype2_txt&quot;    &quot;attacktype3&quot;       
-##  [34] &quot;attacktype3_txt&quot;    &quot;targtype1&quot;          &quot;targtype1_txt&quot;     
-##  [37] &quot;targsubtype1&quot;       &quot;targsubtype1_txt&quot;   &quot;corp1&quot;             
-##  [40] &quot;target1&quot;            &quot;natlty1&quot;            &quot;natlty1_txt&quot;       
-##  [43] &quot;targtype2&quot;          &quot;targtype2_txt&quot;      &quot;targsubtype2&quot;      
-##  [46] &quot;targsubtype2_txt&quot;   &quot;corp2&quot;              &quot;target2&quot;           
-##  [49] &quot;natlty2&quot;            &quot;natlty2_txt&quot;        &quot;targtype3&quot;         
-##  [52] &quot;targtype3_txt&quot;      &quot;targsubtype3&quot;       &quot;targsubtype3_txt&quot;  
-##  [55] &quot;corp3&quot;              &quot;target3&quot;            &quot;natlty3&quot;           
-##  [58] &quot;natlty3_txt&quot;        &quot;gname&quot;              &quot;gsubname&quot;          
-##  [61] &quot;gname2&quot;             &quot;gsubname2&quot;          &quot;gname3&quot;            
-##  [64] &quot;gsubname3&quot;          &quot;motive&quot;             &quot;guncertain1&quot;       
-##  [67] &quot;guncertain2&quot;        &quot;guncertain3&quot;        &quot;individual&quot;        
-##  [70] &quot;nperps&quot;             &quot;nperpcap&quot;           &quot;claimed&quot;           
-##  [73] &quot;claimmode&quot;          &quot;claimmode_txt&quot;      &quot;claim2&quot;            
-##  [76] &quot;claimmode2&quot;         &quot;claimmode2_txt&quot;     &quot;claim3&quot;            
-##  [79] &quot;claimmode3&quot;         &quot;claimmode3_txt&quot;     &quot;compclaim&quot;         
-##  [82] &quot;weaptype1&quot;          &quot;weaptype1_txt&quot;      &quot;weapsubtype1&quot;      
-##  [85] &quot;weapsubtype1_txt&quot;   &quot;weaptype2&quot;          &quot;weaptype2_txt&quot;     
-##  [88] &quot;weapsubtype2&quot;       &quot;weapsubtype2_txt&quot;   &quot;weaptype3&quot;         
-##  [91] &quot;weaptype3_txt&quot;      &quot;weapsubtype3&quot;       &quot;weapsubtype3_txt&quot;  
-##  [94] &quot;weaptype4&quot;          &quot;weaptype4_txt&quot;      &quot;weapsubtype4&quot;      
-##  [97] &quot;weapsubtype4_txt&quot;   &quot;weapdetail&quot;         &quot;nkill&quot;             
-## [100] &quot;nkillus&quot;            &quot;nkillter&quot;           &quot;nwound&quot;            
-## [103] &quot;nwoundus&quot;           &quot;nwoundte&quot;           &quot;property&quot;          
-## [106] &quot;propextent&quot;         &quot;propextent_txt&quot;     &quot;propvalue&quot;         
-## [109] &quot;propcomment&quot;        &quot;ishostkid&quot;          &quot;nhostkid&quot;          
-## [112] &quot;nhostkidus&quot;         &quot;nhours&quot;             &quot;ndays&quot;             
-## [115] &quot;divert&quot;             &quot;kidhijcountry&quot;      &quot;ransom&quot;            
-## [118] &quot;ransomamt&quot;          &quot;ransomamtus&quot;        &quot;ransompaid&quot;        
-## [121] &quot;ransompaidus&quot;       &quot;ransomnote&quot;         &quot;hostkidoutcome&quot;    
-## [124] &quot;hostkidoutcome_txt&quot; &quot;nreleased&quot;          &quot;addnotes&quot;          
-## [127] &quot;scite1&quot;             &quot;scite2&quot;             &quot;scite3&quot;            
-## [130] &quot;dbsource&quot;           &quot;INT_LOG&quot;            &quot;INT_IDEO&quot;          
-## [133] &quot;INT_MISC&quot;           &quot;INT_ANY&quot;            &quot;related&quot;</code></pre>
+<pre><code>##  [1] &quot;ï..iyear&quot;        &quot;imonth&quot;          &quot;iday&quot;            &quot;country&quot;        
+##  [5] &quot;country_txt&quot;     &quot;region&quot;          &quot;region_txt&quot;      &quot;provstate&quot;      
+##  [9] &quot;city&quot;            &quot;attacktype1&quot;     &quot;attacktype1_txt&quot; &quot;attacktype2&quot;    
+## [13] &quot;attacktype2_txt&quot; &quot;attacktype3&quot;     &quot;attacktype3_txt&quot;</code></pre>
 <p>The Input datasource has lot of unnecessary columns which are not required for this research. Hence the next step is to drop the columns apart from the below columns</p>
 <ul>
 <li>iyear</li>

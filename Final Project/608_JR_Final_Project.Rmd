@@ -2,6 +2,7 @@
 title: "608_JR_FInal_Project"
 author: "Jeyaraman Ramalingam"
 date: "5/21/2021"
+runtime: shiny
 output:
   html_document:
     toc: yes
@@ -18,21 +19,30 @@ library(dplyr)
 library(ggplot2)
 library(Amelia)
 library(kableExtra)
+library(maps)
+library(dplyr)
+library(ggplot2)
+library(Amelia)
+library(kableExtra)
+library(shiny)
+library(shinythemes)
+library(shinyWidgets)
 ```
 
-## Overview
+## 1. Overview
 
 Terrorism is a never ending nemesis for the Global Community. Every Year , the threat because of terrorism is growing making it essential to look back and find out the vulnerable regions, countries and provinces/states. This would provide the government organizations necessary insights to take better decisions on handling the Global Terrorism.
 
-## Data Source
+## 2. Data Source
 
 Data Source URL - https://gtd.terrorismdata.com/files/gtd-1970-2019-4/
 
 The GTD is an open-source database, which provides information on domestic and international terrorist attacks around the world since 1970, and now includes more than 200,000 events. For each event, a wide range of information is available, including the date and location of the incident, the weapons used, nature of the target, the number of casualties, and – when identifiable – the group or individual responsible.
 
 ```{r,message=FALSE,warning=FALSE,echo=F}
-data<- read.csv("globalterrorismdb_csv.csv", header=TRUE, check.names = FALSE)
+data<- read.csv("https://raw.githubusercontent.com/jey1987/DATA608/master/Final%20Project/globalterrorismdb_csv.csv")
 colnames(data)
+names(data)[names(data) == "ï..iyear"] <- "iyear"
 ```
 
 The Input datasource has lot of unnecessary columns which are not required for this research. Hence the next step is to drop the columns apart from the below columns
@@ -53,7 +63,7 @@ The Input datasource has lot of unnecessary columns which are not required for t
 * attacktype3
 * attacktype3_txt
 
-## Data Exploration and Preparation
+## 3. Data Exploration and Preparation
 
 ### Data Subsetting
 
@@ -87,12 +97,14 @@ The miss map output and Column Summaries shows us that the attack type 2 and 3 f
 ```{r,message=FALSE,warning=FALSE,echo=F}
 df_final <- df %>% select(iyear,imonth,iday,country,country_txt,region,region_txt,provstate,city,attacktype1,attacktype1_txt)
 colSums(is.na(df_final))
+df_final$event_date  <- as.Date(paste(df_final$iyear,"-",df_final$imonth,"-",df_final$iday,sep=""))
+df_final <- na.omit(df_final)
 ```
 
 The Column Summaries shows us that there are no missing values. 
 
 
-## Data Visualization
+## 4. Data Visualization
 
 These Plots helps us to get some insights on the research questions. We can look at these visuals and compare against the Interactive Shiny App results. The Plots are generated based on the sample data
 
@@ -103,7 +115,7 @@ The below Plots are generated for the Terrorism Data Understanding.
 The total number of terrorist events happened for each Country. This helps us identifying which countries are impacted.
 
 ```{r,message=FALSE,warning=FALSE,echo=F}
-ggplot(df_sample, aes(x = country_txt)) + geom_dotplot(method="histodot", binwidth = 0.2,stackratio=0.8,stroke=2,fill="red")
+ggplot(df_sample, aes(x = country_txt)) + geom_dotplot(method="histodot", fill="red") + coord_flip()
 ```
 
 ### Terrorist Events by Region
@@ -111,7 +123,7 @@ ggplot(df_sample, aes(x = country_txt)) + geom_dotplot(method="histodot", binwid
 The total number of terrorist events happened for each Region. This helps us identifying which region are impacted.
 
 ```{r,message=FALSE,warning=FALSE,echo=F}
-ggplot(df_sample, aes(x = region_txt)) + geom_dotplot(method="histodot", binwidth = 0.2,stackratio=0.8,stroke=2,fill="green")
+ggplot(df_sample, aes(x = region_txt)) + geom_dotplot(method="histodot", fill="green")+ coord_flip()
 ```
 
 ### Terrorist Events by AttackType
@@ -119,7 +131,7 @@ ggplot(df_sample, aes(x = region_txt)) + geom_dotplot(method="histodot", binwidt
 The total number of terrorist events happened for each attack type. This helps us identifying different types of attack used by terrorists.
 
 ```{r,message=FALSE,warning=FALSE,echo=F}
-ggplot(df_sample, aes(x = attacktype1_txt)) + geom_dotplot(method="histodot", binwidth = 0.2,stackratio=0.8,stroke=2,fill="blue")
+ggplot(df_sample, aes(x = attacktype1_txt)) + geom_dotplot(method="histodot", fill="blue")+ coord_flip()
 ```
 
 
@@ -135,6 +147,12 @@ df_country_cnt <- df_final %>%
 df_year_cnt <- df_final %>%
   group_by(iyear) %>%
   summarise(event_cnt=n())
+
+
+df_country_list <- df_final %>%
+  group_by(country_txt) %>%
+  summarise(event_cnt=n()) %>%
+  select(country_txt)
 
 ggplot(df_year_cnt, aes(x=iyear, y=event_cnt)) +  geom_point(aes(size=event_cnt),shape=18,color="red")  +   geom_smooth(method=lm,  linetype="dashed",  color="darkgreen", fill="gray") + xlab("Year") + ylab("Water Resource Scale")   + ggtitle("Yearly trend of Water Resource impact over Child Mortality")
 ```
@@ -185,12 +203,12 @@ ggplot(terror_map, aes(map_id = region, fill = event_cnt))+
 ```
 
 
-### Shiny Application
+## 5. Shiny Application
 
-## Question 1
+### Question 1
 
-```{r,message=FALSE,warning=FALSE,echo=F,eval=FALSE}
-ui <- fluidPage(
+```{r,message=FALSE,warning=FALSE,echo=F}
+ui <- fluidPage(theme = shinytheme("sandstone"),
 
   
   dateRangeInput("daterange4", "Pick Date Range ",
@@ -222,12 +240,12 @@ server <- function(input, output) {
 shinyApp(ui, server)
 ```
 
-## Question 2
+### Question 2
 
-```{r,message=FALSE,warning=FALSE,echo=F,eval=FALSE}
-ui <- fluidPage(
+```{r,message=FALSE,warning=FALSE,echo=F}
+ui <- fluidPage(theme = shinytheme("sandstone"),
   
-  selectInput("variables", "Variable:", choices=c("All",unique(df_country_list$country_txt))),
+  selectInput("variables", "Variable:", choices=c("All",unique(df_country_list$country_txt)),multiple=TRUE),
   dateRangeInput("daterange4", "Pick Date Range ",
                  start = df$event_date,
                  end = df$event_date),
@@ -259,10 +277,10 @@ server <- function(input, output) {
 shinyApp(ui, server)
 ```
 
-## Question 3
+### Question 3
 
-```{r,message=FALSE,warning=FALSE,echo=F,eval=FALSE}
-ui <- fluidPage(
+```{r,message=FALSE,warning=FALSE,echo=F}
+ui <- fluidPage(theme = shinytheme("sandstone"),
 
   dateRangeInput("daterange4", "Pick Date Range ",
                  start = df$event_date,
@@ -295,12 +313,12 @@ server <- function(input, output) {
 shinyApp(ui, server)
 ```
 
-## Question 4
+### Question 4
 
-```{r,message=FALSE,warning=FALSE,echo=F,eval=FALSE}
-ui <- fluidPage(
+```{r,message=FALSE,warning=FALSE,echo=F}
+ui <- fluidPage(theme = shinytheme("sandstone"),
   
-  selectInput("variables", "Variable:", choices=c("All",unique(df_final$attacktype1_txt))),
+  selectInput("variables", "Variable:", choices=c("All",unique(df_final$attacktype1_txt)),multiple=TRUE),
   
   dateRangeInput("daterange4", "Pick Date Range ",
                  start = df$event_date,
@@ -332,3 +350,16 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 ```
+
+## 6. Conclusion
+
+On completion of Data Analysis and generating necessary visualizations the answers to the research questions can be answered.
+
+1. Looking at the data post 2010 , The top countries which are impacted by terrorism are Iraq, India, Afghanistan, Pakistan, Somalia.
+
+2. For United States after 1970, the most impacted state is California.
+
+3. The most impacted regions are South Asia and East/North Africa.
+
+4. For the Assassination type of Attack , the most impacted countries are Iraq and few countries in Africa.
+
